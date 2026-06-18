@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // For production (Vercel/Neon/Supabase): change to "postgresql"
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  phone        String   @unique
+  name         String
+  role         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  orders        Order[]
+  driverProfile DriverProfile?
+  responses     OrderResponse[]
+}
+
+model DriverProfile {
+  id       String @id @default(cuid())
+  userId   String @unique
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  city     String
+  truck    String
+  capacity String
+  priceKm  Int
+  features String
+
+  rating   Float   @default(0)
+  reviews  Int     @default(0)
+  trips    Int     @default(0)
+  verified Boolean @default(false)
+  pro      Boolean @default(false)
+  online   Boolean @default(true)
+
+  responses OrderResponse[]
+}
+
+model Order {
+  id          String  @id @default(cuid())
+  clientId    String
+  client      User    @relation(fields: [clientId], references: [id])
+
+  fromCity    String
+  toCity      String
+  cargo       String
+  description String?
+  date        String
+  budget      Int?
+  negotiable  Boolean @default(false)
+  specs       String
+  status      String  @default("ACTIVE")
+  urgent      Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  responses OrderResponse[]
+}
+
+model OrderResponse {
+  id              String        @id @default(cuid())
+  orderId         String
+  order           Order         @relation(fields: [orderId], references: [id])
+  driverProfileId String
+  driverProfile   DriverProfile @relation(fields: [driverProfileId], references: [id])
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+
+  price   Int
+  message String
+
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,98 @@
+:root {
+  /* ===== СВЕТЛАЯ ТЕМА (по умолчанию — дневная для водителей) ===== */
+  --bg: #F5F4F0;
+  --surface: #FFFFFF;
+  --surface-2: #EEECEA;
+  --border: #000000;          /* чёрная обводка на светлой теме */
+  --border-soft: #D8D6D0;     /* мягкая обводка для крупных контейнеров */
+  --text: #000000;            /* чёрный текст */
+  --text-2: #2B2A28;          /* почти чёрный для вторичного */
+  --text-3: #5C5B57;          /* серый, но читаемый */
+  --accent: #D85A30;
+  --accent-bg: #FFE4D6;
+  --accent-text: #7A2E12;
+  --star: #BA7517;
+  --verified-bg: #E6F4D9;
+  --verified-border: #4F8A1E;
+  --verified-text: #27500A;
+  --danger-bg: #FEE2E2;
+  --danger-text: #B91C1C;
+  --nav-bg: #FFFFFF;
+  --input-bg: #FFFFFF;
+  --logo-plate: #1A1A18;      /* тёмная плашка под логотип на светлой теме */
+  --logo-plate-show: 1;
+  --online: #16A34A;
+}
+
+[data-theme='dark'] {
+  /* ===== ТЁМНАЯ ТЕМА (ночная) ===== */
+  --bg: #0E0F11;
+  --surface: #16181C;
+  --surface-2: #1E2127;
+  --border: #2A2D35;
+  --border-soft: #2A2D35;
+  --text: #F0F0EE;
+  --text-2: #C8C8C4;
+  --text-3: #A0A09C;
+  --accent: #F07040;
+  --accent-bg: #2A1A10;
+  --accent-text: #FFB088;
+  --star: #F59E0B;
+  --verified-bg: #0D2010;
+  --verified-border: #22863A;
+  --verified-text: #6FD88A;
+  --danger-bg: #3A1212;
+  --danger-text: #F87171;
+  --nav-bg: #16181C;
+  --input-bg: #1E2127;
+  --logo-plate: transparent;
+  --logo-plate-show: 0;
+  --online: #22C55E;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-manrope), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.22s ease, color 0.22s ease;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Доступность: видимый фокус для клавиатуры */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+/* Уважение к prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,283 @@
+/* ====================================================================
+   TruckHUB — общие стили компонентов
+   Правило по контрасту: на светлой теме текст и обводки — чёрные.
+   Для текста используем И color, И -webkit-text-fill-color, чтобы
+   никакое внешнее правило не сделало текст прозрачным.
+   ==================================================================== */
+
+/* ---------- ЧИПЫ-ФИЛЬТРЫ (кнопки выбора категорий) ---------- */
+.chip {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  -webkit-text-fill-color: var(--text);
+  opacity: 1;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+.chip:hover {
+  background: #1A1A18;
+  border-color: #1A1A18;
+  color: #FFFFFF;
+  -webkit-text-fill-color: #FFFFFF;
+}
+.chip.is-active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent-text);
+  -webkit-text-fill-color: var(--accent-text);
+  font-weight: 700;
+}
+.chip.is-active:hover {
+  background: #1A1A18;
+  border-color: #1A1A18;
+  color: #FFFFFF;
+  -webkit-text-fill-color: #FFFFFF;
+}
+
+/* ---------- ТЕГИ ХАРАКТЕРИСТИК (в карточках) ---------- */
+.spec-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  -webkit-text-fill-color: var(--text);
+}
+
+/* ---------- КНОПКИ ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: inherit;
+  font-weight: 700;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #FFFFFF;
+  -webkit-text-fill-color: #FFFFFF;
+  border: none;
+  padding: 10px 18px;
+  font-size: 13px;
+}
+.btn-primary:hover { opacity: 0.92; }
+.btn-secondary {
+  background: var(--surface-2);
+  color: var(--text);
+  -webkit-text-fill-color: var(--text);
+  border: 1px solid var(--border);
+  padding: 9px 16px;
+  font-size: 12px;
+}
+
+/* ---------- БЕЙДЖИ ---------- */
+.badge-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--verified-bg);
+  border: 1px solid var(--verified-border);
+  color: var(--verified-text);
+  -webkit-text-fill-color: var(--verified-text);
+}
+.badge-new {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #FFFFFF;
+  -webkit-text-fill-color: #FFFFFF;
+}
+.badge-urgent {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 8px;
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-text);
+  color: var(--danger-text);
+  -webkit-text-fill-color: var(--danger-text);
+}
+
+/* ---------- КАРТОЧКИ ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+}
+
+/* ---------- ФОРМЫ ---------- */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-2);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.form-input {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text);
+  -webkit-text-fill-color: var(--text);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  appearance: none;
+}
+.form-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.form-input::placeholder {
+  color: var(--text-3);
+  -webkit-text-fill-color: var(--text-3);
+}
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+.form-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  -webkit-text-fill-color: var(--text);
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+.form-checkbox-row.is-checked {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent-text);
+  -webkit-text-fill-color: var(--accent-text);
+}
+.form-checkbox-row input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ---------- АДАПТИВНЫЕ СЕТКИ ---------- */
+.layout-sidebar {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  min-height: 480px;
+  background: var(--bg);
+}
+.layout-sidebar-right {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  min-height: 500px;
+  background: var(--bg);
+}
+.layout-driver {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  background: var(--bg);
+}
+
+/* ---------- NAVBAR ---------- */
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-mobile-controls { display: none; align-items: center; gap: 8px; }
+.nav-mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--border-soft);
+  padding: 12px 20px 16px;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 100;
+}
+.nav-mobile-menu.is-open { display: flex; }
+.nav-mobile-link {
+  display: block;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-2);
+  border-bottom: 1px solid var(--border-soft);
+  text-decoration: none;
+}
+.nav-mobile-link:last-of-type { border-bottom: none; }
+.nav-mobile-link.is-active { color: var(--accent); }
+
+/* ---------- ЛОГОТИП ---------- */
+.logo-plate {
+  display: inline-flex;
+  align-items: center;
+  background: var(--logo-plate);
+  border-radius: 6px;
+  padding: calc(3px * var(--logo-plate-show)) calc(8px * var(--logo-plate-show));
+}
+
+/* ---------- МЕДИАЗАПРОСЫ ---------- */
+@media (max-width: 768px) {
+  /* Navbar */
+  .nav-links { display: none; }
+  .nav-mobile-controls { display: flex; }
+
+  /* Layouts */
+  .layout-sidebar { grid-template-columns: 1fr; }
+  .layout-sidebar > aside { border-right: none; border-bottom: 1px solid var(--border-soft); }
+  .layout-sidebar-right { grid-template-columns: 1fr; }
+  .layout-sidebar-right > aside { border-left: none; border-top: 1px solid var(--border-soft); }
+  .layout-driver { grid-template-columns: 1fr; }
+  .layout-driver > aside { border-left: none; border-top: 1px solid var(--border-soft); }
+
+  /* HomeContent stats 2×2 */
+  .stats-row { flex-wrap: wrap; }
+  .stats-row > div { min-width: 50%; border-right: none; border-bottom: 1px solid var(--border-soft); }
+  .stats-row > div:nth-child(odd) { border-right: 1px solid var(--border-soft); }
+  .stats-row > div:nth-last-child(-n+2) { border-bottom: none; }
+
+  /* HomeContent two paths */
+  .paths-grid { grid-template-columns: 1fr !important; }
+  .paths-divider { display: none !important; }
+
+  /* Catalog search */
+  .catalog-search { flex-wrap: wrap; }
+  .catalog-search > div { max-width: none; flex: 1 1 calc(50% - 8px); }
+}
