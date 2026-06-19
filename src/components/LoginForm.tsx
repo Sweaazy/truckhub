@@ -6,25 +6,26 @@ import { IconEye, IconEyeOff, IconArrowRight, IconPhone } from '@tabler/icons-re
 import { TelegramLoginButton } from './TelegramLoginButton';
 
 const COUNTRY_CODES = [
-  { flag: '🇰🇿', code: '+7',   label: 'KZ +7' },
-  { flag: '🇷🇺', code: '+7',   label: 'RU +7' },
-  { flag: '🇺🇿', code: '+998', label: 'UZ +998' },
-  { flag: '🇺🇦', code: '+380', label: 'UA +380' },
-  { flag: '🇧🇾', code: '+375', label: 'BY +375' },
-  { flag: '🇦🇿', code: '+994', label: 'AZ +994' },
-  { flag: '🇬🇪', code: '+995', label: 'GE +995' },
-  { flag: '🇦🇲', code: '+374', label: 'AM +374' },
-  { flag: '🇰🇬', code: '+996', label: 'KG +996' },
-  { flag: '🇹🇯', code: '+992', label: 'TJ +992' },
-  { flag: '🇹🇲', code: '+993', label: 'TM +993' },
-  { flag: '🇲🇩', code: '+373', label: 'MD +373' },
+  { flag: '🇰🇿', code: '+7',   label: 'KZ +7',   placeholder: '700 000 00 00' },
+  { flag: '🇷🇺', code: '+7',   label: 'RU +7',   placeholder: '900 000 00 00' },
+  { flag: '🇺🇿', code: '+998', label: 'UZ +998', placeholder: '90 000 00 00' },
+  { flag: '🇺🇦', code: '+380', label: 'UA +380', placeholder: '50 000 00 00' },
+  { flag: '🇧🇾', code: '+375', label: 'BY +375', placeholder: '29 000 00 00' },
+  { flag: '🇦🇿', code: '+994', label: 'AZ +994', placeholder: '50 000 00 00' },
+  { flag: '🇬🇪', code: '+995', label: 'GE +995', placeholder: '555 00 00 00' },
+  { flag: '🇦🇲', code: '+374', label: 'AM +374', placeholder: '77 00 00 00' },
+  { flag: '🇰🇬', code: '+996', label: 'KG +996', placeholder: '700 00 00 00' },
+  { flag: '🇹🇯', code: '+992', label: 'TJ +992', placeholder: '900 00 00 00' },
+  { flag: '🇹🇲', code: '+993', label: 'TM +993', placeholder: '65 00 00 00' },
+  { flag: '🇲🇩', code: '+373', label: 'MD +373', placeholder: '60 000 000' },
 ];
 
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get('from') ?? '/';
-  const [countryCode, setCountryCode] = useState('+7');
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[0]);
+  const countryCode = selectedCountry.code;
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -76,15 +77,15 @@ export function LoginForm() {
         <div className="form-field">
           <label className="form-label">Номер телефона</label>
           <div style={{ display: 'flex', gap: 6 }}>
-            <select className="form-input" value={countryCode} onChange={(e) => setCountryCode(e.target.value)} style={{ width: 110, flexShrink: 0 }}>
+            <select className="form-input" value={selectedCountry.label} onChange={(e) => setSelectedCountry(COUNTRY_CODES.find(c => c.label === e.target.value)!)} style={{ width: 110, flexShrink: 0 }}>
               {COUNTRY_CODES.map((c) => (
-                <option key={c.label} value={c.code}>{c.flag} {c.label}</option>
+                <option key={c.label} value={c.label}>{c.flag} {c.label}</option>
               ))}
             </select>
             <input
               className="form-input"
               type="tel"
-              placeholder="700 000 00 00"
+              placeholder={selectedCountry.placeholder}
               value={phone}
               onChange={(e) => { setPhone(e.target.value); setError(''); }}
               autoComplete="tel"
