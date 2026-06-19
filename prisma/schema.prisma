@@ -9,10 +9,11 @@ datasource db {
 
 model User {
   id           String   @id @default(cuid())
-  phone        String   @unique
+  phone        String?  @unique
   name         String
-  role         String
-  passwordHash String
+  role         String   @default("CLIENT")
+  passwordHash String?
+  telegramId   String?  @unique
   createdAt    DateTime @default(now())
 
   orders        Order[]

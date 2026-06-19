@@ -6,6 +6,7 @@ import Link from 'next/link';
 import {
   IconPackage, IconTruck, IconCheck, IconArrowLeft, IconArrowRight, IconMapPin, IconEye, IconEyeOff,
 } from '@tabler/icons-react';
+import { TelegramLoginButton } from './TelegramLoginButton';
 
 type Role = 'client' | 'driver';
 type ClientType = 'person' | 'ip' | 'too';
@@ -182,6 +183,14 @@ export function RegisterForm() {
           <button className="btn btn-primary" style={{ width: '100%', padding: 12, fontSize: 14 }} onClick={() => setStep(2)}>
             Далее <IconArrowRight size={15} />
           </button>
+
+          <div style={{ margin: '20px 0', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ flex: 1, height: 1, background: 'var(--border-soft)' }} />
+            <span style={{ fontSize: 11, color: 'var(--text-3)' }}>или быстрая регистрация</span>
+            <div style={{ flex: 1, height: 1, background: 'var(--border-soft)' }} />
+          </div>
+
+          <TelegramLoginButton />
 
           <p style={{ textAlign: 'center', fontSize: 11, color: 'var(--text-3)', marginTop: 16 }}>
             Уже есть аккаунт?{' '}

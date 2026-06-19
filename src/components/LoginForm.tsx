@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { IconEye, IconEyeOff, IconArrowRight, IconPhone } from '@tabler/icons-react';
+import { TelegramLoginButton } from './TelegramLoginButton';
 
 export function LoginForm() {
   const router = useRouter();
@@ -111,13 +112,15 @@ export function LoginForm() {
         </button>
       </form>
 
-      <div style={{ margin: '24px 0', display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div style={{ margin: '20px 0', display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{ flex: 1, height: 1, background: 'var(--border-soft)' }} />
-        <span style={{ fontSize: 11, color: 'var(--text-3)', fontWeight: 500 }}>или</span>
+        <span style={{ fontSize: 11, color: 'var(--text-3)', fontWeight: 500 }}>или войдите через</span>
         <div style={{ flex: 1, height: 1, background: 'var(--border-soft)' }} />
       </div>
 
-      <div style={{ textAlign: 'center' }}>
+      <TelegramLoginButton />
+
+      <div style={{ textAlign: 'center', marginTop: 20 }}>
         <p style={{ fontSize: 12, color: 'var(--text-2)' }}>
           Нет аккаунта?{' '}
           <Link href="/register" style={{ color: 'var(--accent)', fontWeight: 700 }}>
