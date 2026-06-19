@@ -12,6 +12,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.json({ error: 'Только водители могут откликаться на заявки' }, { status: 403 });
   }
 
+  const user = await prisma.user.findUnique({ where: { id: session.userId }, select: { phoneVerified: true } });
+  if (!user?.phoneVerified) {
+    return NextResponse.json({ error: 'Подтвердите аккаунт через Telegram чтобы откликаться на заявки', code: 'UNVERIFIED' }, { status: 403 });
+  }
+
   const { id: orderId } = await params;
 
   const order = await prisma.order.findUnique({ where: { id: orderId } });

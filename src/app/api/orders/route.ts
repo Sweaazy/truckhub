@@ -39,6 +39,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Только клиенты могут создавать заявки' }, { status: 403 });
   }
 
+  const user = await prisma.user.findUnique({ where: { id: session.userId }, select: { phoneVerified: true } });
+  if (!user?.phoneVerified) {
+    return NextResponse.json({ error: 'Подтвердите аккаунт через Telegram чтобы создавать заявки', code: 'UNVERIFIED' }, { status: 403 });
+  }
+
   const body = await req.json();
   const data = CreateOrderSchema.safeParse(body);
   if (!data.success) {

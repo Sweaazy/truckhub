@@ -38,8 +38,10 @@ export async function GET(req: NextRequest) {
 
   if (!user) {
     user = await prisma.user.create({
-      data: { telegramId, name, role: 'CLIENT' },
+      data: { telegramId, name, role: 'CLIENT', phoneVerified: true },
     });
+  } else if (!user.phoneVerified) {
+    await prisma.user.update({ where: { id: user.id }, data: { phoneVerified: true } });
   }
 
   const token = await signToken({ userId: user.id, role: user.role });

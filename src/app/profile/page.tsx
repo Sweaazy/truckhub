@@ -22,6 +22,7 @@ export default async function ProfilePage() {
       phone: true,
       role: true,
       createdAt: true,
+      phoneVerified: true,
       orders: {
         orderBy: { createdAt: 'desc' },
         take: 20,

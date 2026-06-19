@@ -4,8 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import {
   IconUser, IconBolt, IconPlus, IconTruck, IconStar, IconMapPin,
-  IconArrowRight, IconMessageCircle, IconPackage,
+  IconArrowRight, IconMessageCircle, IconPackage, IconShieldCheck, IconAlertTriangle,
 } from '@tabler/icons-react';
+import { TelegramLinkButton } from './TelegramLinkButton';
 
 const SHIPMENT_STATUSES = [
   { code: 'PREPARING',  label: 'Подготовка к отправке' },
@@ -82,9 +83,10 @@ interface DriverProfileData {
 interface ProfileUser {
   id: string;
   name: string;
-  phone: string;
+  phone: string | null;
   role: string;
   createdAt: Date;
+  phoneVerified: boolean;
   orders: Order[];
   shipments: ShipmentData[];
   driverProfile: DriverProfileData | null;
@@ -192,12 +194,30 @@ export function ProfileView({ user }: { user: ProfileUser }) {
           <IconUser size={22} style={{ color: 'var(--text-3)' }} />
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text)', marginBottom: 3 }}>{user.name}</div>
+          <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text)', marginBottom: 3, display: 'flex', alignItems: 'center', gap: 8 }}>
+            {user.name}
+            {user.phoneVerified
+              ? <IconShieldCheck size={16} style={{ color: 'var(--verified-text)', flexShrink: 0 }} />
+              : <IconAlertTriangle size={16} style={{ color: '#f59e0b', flexShrink: 0 }} />}
+          </div>
           <div style={{ fontSize: 12, color: 'var(--text-3)' }}>
-            {isDriver ? 'Перевозчик' : 'Клиент'} · {user.phone} · На TruckHUB с {joinedYear}
+            {isDriver ? 'Перевозчик' : 'Клиент'} {user.phone ? `· ${user.phone}` : ''} · На TruckHUB с {joinedYear}
           </div>
         </div>
       </div>
+
+      {/* Verification banner */}
+      {!user.phoneVerified && (
+        <div style={{ marginBottom: 24, padding: '16px 18px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 12 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#92400e', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <IconAlertTriangle size={14} /> Аккаунт не верифицирован
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--text-2)', marginBottom: 12, lineHeight: 1.5 }}>
+            Без верификации вы не можете {isDriver ? 'откликаться на заявки' : 'создавать заявки'}. Привяжите Telegram — это бесплатно и займёт 10 секунд.
+          </div>
+          <TelegramLinkButton />
+        </div>
+      )}
 
       {/* Driver profile card */}
       {isDriver && user.driverProfile && (

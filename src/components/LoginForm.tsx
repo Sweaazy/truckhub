@@ -1,15 +1,30 @@
 'use client';
-
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { IconEye, IconEyeOff, IconArrowRight, IconPhone } from '@tabler/icons-react';
 import { TelegramLoginButton } from './TelegramLoginButton';
 
+const COUNTRY_CODES = [
+  { flag: '🇰🇿', code: '+7',   label: 'KZ +7' },
+  { flag: '🇷🇺', code: '+7',   label: 'RU +7' },
+  { flag: '🇺🇿', code: '+998', label: 'UZ +998' },
+  { flag: '🇺🇦', code: '+380', label: 'UA +380' },
+  { flag: '🇧🇾', code: '+375', label: 'BY +375' },
+  { flag: '🇦🇿', code: '+994', label: 'AZ +994' },
+  { flag: '🇬🇪', code: '+995', label: 'GE +995' },
+  { flag: '🇦🇲', code: '+374', label: 'AM +374' },
+  { flag: '🇰🇬', code: '+996', label: 'KG +996' },
+  { flag: '🇹🇯', code: '+992', label: 'TJ +992' },
+  { flag: '🇹🇲', code: '+993', label: 'TM +993' },
+  { flag: '🇲🇩', code: '+373', label: 'MD +373' },
+];
+
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get('from') ?? '/';
+  const [countryCode, setCountryCode] = useState('+7');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -28,7 +43,7 @@ export function LoginForm() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: phone.trim(), password }),
+        body: JSON.stringify({ phone: `${countryCode}${phone.trim().replace(/^0/, '')}`, password }),
       });
 
       const data = await res.json();
@@ -60,14 +75,22 @@ export function LoginForm() {
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div className="form-field">
           <label className="form-label">Номер телефона</label>
-          <input
-            className="form-input"
-            type="tel"
-            placeholder="+7 700 000 00 00"
-            value={phone}
-            onChange={(e) => { setPhone(e.target.value); setError(''); }}
-            autoComplete="tel"
-          />
+          <div style={{ display: 'flex', gap: 6 }}>
+            <select className="form-input" value={countryCode} onChange={(e) => setCountryCode(e.target.value)} style={{ width: 110, flexShrink: 0 }}>
+              {COUNTRY_CODES.map((c) => (
+                <option key={c.label} value={c.code}>{c.flag} {c.label}</option>
+              ))}
+            </select>
+            <input
+              className="form-input"
+              type="tel"
+              placeholder="700 000 00 00"
+              value={phone}
+              onChange={(e) => { setPhone(e.target.value); setError(''); }}
+              autoComplete="tel"
+              style={{ flex: 1 }}
+            />
+          </div>
         </div>
 
         <div className="form-field">

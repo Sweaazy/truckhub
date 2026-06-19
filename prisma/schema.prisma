@@ -13,8 +13,9 @@ model User {
   name         String
   role         String   @default("CLIENT")
   passwordHash String?
-  telegramId   String?  @unique
-  createdAt    DateTime @default(now())
+  telegramId     String?  @unique
+  phoneVerified  Boolean  @default(false)
+  createdAt      DateTime @default(now())
 
   orders        Order[]
   driverProfile DriverProfile?
