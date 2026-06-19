@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     const { phone, password } = data.data;
 
     const user = await prisma.user.findUnique({ where: { phone } });
-    if (!user) {
+    if (!user || !user.passwordHash) {
       return NextResponse.json({ error: 'Неверный номер или пароль' }, { status: 401 });
     }
 
