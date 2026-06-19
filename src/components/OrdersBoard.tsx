@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Chip } from './Chip';
 import { DBOrder } from '@/lib/types';
+import { ALL_CURRENCIES } from '@/lib/useCurrency';
 import { IconUser, IconBuilding, IconMessageCircle, IconBolt, IconPlus } from '@tabler/icons-react';
 
 function timeAgo(iso: string): string {
@@ -24,7 +25,10 @@ function isBusiness(name: string): boolean {
 
 function budgetDisplay(order: DBOrder): string {
   if (order.negotiable) return 'Договорная';
-  if (order.budget) return `${order.budget.toLocaleString('ru')} ₸`;
+  if (order.budget) {
+    const sym = ALL_CURRENCIES.find((c) => c.code === order.currency)?.symbol ?? order.currency;
+    return `${order.budget.toLocaleString('ru')} ${sym}`;
+  }
   return '—';
 }
 

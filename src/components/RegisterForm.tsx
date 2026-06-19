@@ -117,6 +117,17 @@ export function RegisterForm() {
             ? 'Теперь вы можете разместить заявку на перевозку или сразу выбрать перевозчика из каталога.'
             : 'Ваш профиль создан. Найдите первый груз по своему маршруту на доске заявок.'}
         </p>
+        {role === 'driver' && (
+          <div style={{ width: '100%', maxWidth: 360, background: 'var(--accent)', borderRadius: 14, padding: '18px 20px', marginBottom: 16, textAlign: 'left' }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 6 }}>Оформите профиль — это повышает шансы найти груз</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.82)', marginBottom: 14, lineHeight: 1.5 }}>
+              Клиенты доверяют водителям с фото, описанием и заполненными данными. Займёт 2 минуты.
+            </div>
+            <Link href="/profile" className="btn" style={{ background: '#fff', color: 'var(--accent)', fontSize: 12, padding: '8px 16px', fontWeight: 700, borderRadius: 8 }}>
+              Оформить профиль
+            </Link>
+          </div>
+        )}
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
           {role === 'client' ? (
             <>

@@ -54,6 +54,7 @@ model Order {
   budget      Int?
   negotiable  Boolean @default(false)
   specs       String
+  currency    String  @default("USD")
   status      String  @default("ACTIVE")
   urgent      Boolean @default(false)
 

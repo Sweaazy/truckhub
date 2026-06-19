@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
-  IconArrowRight, IconCheck, IconMapPin, IconPackage, IconCalendar, IconCurrencyTenge, IconStar,
+  IconArrowRight, IconCheck, IconMapPin, IconPackage, IconCalendar, IconStar,
 } from '@tabler/icons-react';
+import { useCurrency, ALL_CURRENCIES } from '@/lib/useCurrency';
 
 const CARGO_TYPES = ['Переезд', 'Доставка', 'Стройматериалы', 'Оборудование', 'Другое'];
 
@@ -28,6 +29,7 @@ export function CreateOrderForm() {
   const [date, setDate] = useState('');
   const [budget, setBudget] = useState('');
   const [negotiable, setNegotiable] = useState(false);
+  const { currency, setCurrency } = useCurrency();
   const [specs, setSpecs] = useState<Set<Spec>>(new Set());
   const [submitted, setSubmitted] = useState(false);
   const [orderId, setOrderId] = useState('');
@@ -61,6 +63,7 @@ export function CreateOrderForm() {
           description: description.trim(),
           date,
           budget: negotiable ? null : (budget ? Number(budget) : null),
+          currency: currency.code,
           negotiable,
           specs: Array.from(specs).map((id) => SPECS.find((s) => s.id === id)!.label),
           urgent: false,
@@ -155,8 +158,15 @@ export function CreateOrderForm() {
             <input className="form-input" type="date" value={date} onChange={(e) => setDate(e.target.value)} required style={{ colorScheme: 'light dark' }} />
           </div>
           <div className="form-field">
-            <label className="form-label"><IconCurrencyTenge size={11} style={{ verticalAlign: -1, marginRight: 3 }} />Бюджет (₸)</label>
-            <input className="form-input" type="number" placeholder="45 000" value={budget} onChange={(e) => setBudget(e.target.value)} disabled={negotiable} style={{ opacity: negotiable ? 0.45 : 1 }} />
+            <label className="form-label">Бюджет</label>
+            <div style={{ display: 'flex', gap: 6 }}>
+              <input className="form-input" type="number" placeholder="45 000" value={budget} onChange={(e) => setBudget(e.target.value)} disabled={negotiable} style={{ opacity: negotiable ? 0.45 : 1, flex: 1 }} />
+              <select className="form-input" value={currency.code} onChange={(e) => setCurrency(e.target.value)} style={{ width: 90, flexShrink: 0 }}>
+                {ALL_CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code}>{c.code} {c.symbol}</option>
+                ))}
+              </select>
+            </div>
             <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--text-2)', marginTop: 5, cursor: 'pointer' }}>
               <input type="checkbox" checked={negotiable} onChange={(e) => { setNegotiable(e.target.checked); if (e.target.checked) setBudget(''); }} style={{ accentColor: 'var(--accent)', width: 13, height: 13 }} />
               Договорная

@@ -24,6 +24,7 @@ export const CreateOrderSchema = z.object({
   description: z.string().optional(),
   date: z.string().min(1),
   budget: z.coerce.number().nullable().optional(),
+  currency: z.string().default('USD'),
   negotiable: z.boolean().default(false),
   specs: z.array(z.string()).default([]),
   urgent: z.boolean().default(false),

@@ -37,6 +37,7 @@ export interface DBOrder {
   description: string | null;
   date: string;
   budget: number | null;
+  currency: string;
   negotiable: boolean;
   specs: string[];
   status: string;

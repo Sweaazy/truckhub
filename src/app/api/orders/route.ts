@@ -45,12 +45,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: data.error.issues[0].message }, { status: 400 });
   }
 
-  const { specs, ...rest } = data.data;
+  const { specs, currency, ...rest } = data.data;
 
   const order = await prisma.order.create({
     data: {
       ...rest,
       budget: rest.budget ?? null,
+      currency: currency ?? 'USD',
       specs: specs.join(','),
       clientId: session.userId,
     },

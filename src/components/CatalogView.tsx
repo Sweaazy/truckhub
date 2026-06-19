@@ -6,7 +6,7 @@ import { Chip } from './Chip';
 import { DBDriverProfile } from '@/lib/types';
 import { IconSearch, IconTruck, IconStar, IconMapPin, IconCheck } from '@tabler/icons-react';
 
-const TRUCK_TYPES = ['Газель', 'Фура', 'Рефриж.', 'Манипул.', 'Самосвал', 'Эвакуатор'];
+const TRUCK_TYPES = ['Фургон', 'Тентованный', 'Бортовой', 'Рефрижератор', 'Изотерм', 'Самосвал', 'Цистерна', 'Контейнеровоз', 'Автовоз', 'Манипулятор', 'Длинномер', 'Полуприцеп', 'Прицеп'];
 const RATING_OPTIONS = ['Любой', '4.0+', '4.5+', '4.8+'];
 
 function parseMinRating(r: string): number {
