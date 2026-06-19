@@ -60,7 +60,7 @@ export default async function ProfilePage() {
           shipments: {
             orderBy: { createdAt: 'desc' },
             include: {
-              order: { select: { fromCity: true, toCity: true, cargo: true } },
+              order: { select: { fromCity: true, toCity: true, cargo: true, currency: true, budget: true, negotiable: true } },
               client: { select: { name: true } },
             },
           },
