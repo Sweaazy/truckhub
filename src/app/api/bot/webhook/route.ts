@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: telegramId,
-            text: '✅ Ваш аккаунт TruckHUB успешно верифицирован!',
+            text: '✅ Ваш аккаунт в сервисе TruckHUB успешно верифицирован!\n\nТеперь вам доступны все функции платформы. Можете вернуться на сайт.',
           }),
         });
       }
