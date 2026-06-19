@@ -267,7 +267,7 @@ export function OrderDetail(props: OrderDetailProps) {
                 <button
                   className="btn btn-secondary"
                   style={{ width: '100%', fontSize: 12 }}
-                  onClick={handleClose}
+                  onClick={() => handleClose()}
                   disabled={closeLoading}
                 >
                   <IconX size={13} /> {closeLoading ? 'Закрываем...' : 'Закрыть заявку'}
