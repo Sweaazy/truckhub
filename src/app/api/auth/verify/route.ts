@@ -2,10 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
-// GET /api/auth/verify — generate a token and return the bot deep link
+let webhookSet = false;
+
+async function ensureWebhook(host: string) {
+  if (webhookSet) return;
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  if (!token) return;
+  const webhookUrl = `https://${host}/api/bot/webhook`;
+  await fetch(`https://api.telegram.org/bot${token}/setWebhook?url=${encodeURIComponent(webhookUrl)}`);
+  webhookSet = true;
+}
+
 export async function GET(req: NextRequest) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const host = req.headers.get('host') ?? 'truckhub.vercel.app';
+  await ensureWebhook(host);
 
   const token = Math.random().toString(36).substring(2, 10).toUpperCase();
 
@@ -14,11 +27,6 @@ export async function GET(req: NextRequest) {
     data: { verifyToken: token },
   });
 
-  const botUsername = 'teoriginalbot';
-  const deepLink = `https://t.me/${botUsername}?start=verify_${token}`;
-
-  return NextResponse.json({ deepLink, token });
+  const deepLink = `https://t.me/teoriginalbot?start=verify_${token}`;
+  return NextResponse.json({ deepLink });
 }
-
-// GET /api/auth/verify?poll=1 — check if current user is now verified
-// (we reuse the same route with a query param to keep things simple)
