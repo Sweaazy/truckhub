@@ -209,11 +209,14 @@ export function ProfileView({ user }: { user: ProfileUser }) {
       {/* Verification banner */}
       {!user.phoneVerified && (
         <div style={{ marginBottom: 24, padding: '16px 18px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 12 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#92400e', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#92400e', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6 }}>
             <IconAlertTriangle size={14} /> Аккаунт не верифицирован
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-2)', marginBottom: 12, lineHeight: 1.5 }}>
-            Без верификации вы не можете {isDriver ? 'откликаться на заявки' : 'создавать заявки'}. Привяжите Telegram — это бесплатно и займёт 10 секунд.
+          <div style={{ fontSize: 12, color: 'var(--text-2)', marginBottom: 4, lineHeight: 1.6 }}>
+            Без верификации вы не можете {isDriver ? 'откликаться на заявки и ваш профиль не виден в каталоге' : 'создавать заявки'}.
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--text-2)', marginBottom: 12, lineHeight: 1.6 }}>
+            Нажмите кнопку ниже → откроется окно Telegram → войдите через приложение → аккаунт будет подтверждён. Код придёт в Telegram-приложение, не в SMS.
           </div>
           <TelegramLinkButton />
         </div>

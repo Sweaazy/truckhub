@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
 
   const drivers = await prisma.driverProfile.findMany({
     where: {
+      user: { phoneVerified: true },
       ...(city ? { city } : {}),
       ...(minRating > 0 ? { rating: { gte: minRating } } : {}),
     },

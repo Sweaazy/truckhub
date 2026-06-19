@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { IconEye, IconEyeOff, IconArrowRight, IconPhone } from '@tabler/icons-react';
-import { TelegramLoginButton } from './TelegramLoginButton';
 
 const COUNTRY_CODES = [
   { flag: '🇰🇿', code: '+7',   label: 'KZ +7',   placeholder: '700 000 00 00' },
@@ -135,14 +134,6 @@ export function LoginForm() {
           {loading ? 'Входим...' : <><span>Войти</span> <IconArrowRight size={15} /></>}
         </button>
       </form>
-
-      <div style={{ margin: '20px 0', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{ flex: 1, height: 1, background: 'var(--border-soft)' }} />
-        <span style={{ fontSize: 11, color: 'var(--text-3)', fontWeight: 500 }}>или войдите через</span>
-        <div style={{ flex: 1, height: 1, background: 'var(--border-soft)' }} />
-      </div>
-
-      <TelegramLoginButton />
 
       <div style={{ textAlign: 'center', marginTop: 20 }}>
         <p style={{ fontSize: 12, color: 'var(--text-2)' }}>
