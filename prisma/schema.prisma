@@ -3,8 +3,7 @@ generator client {
 }
 
 datasource db {
-  // For production (Vercel/Neon/Supabase): change to "postgresql"
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
