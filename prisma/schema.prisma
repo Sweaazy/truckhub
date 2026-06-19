@@ -18,6 +18,7 @@ model User {
   orders        Order[]
   driverProfile DriverProfile?
   responses     OrderResponse[]
+  shipments     Shipment[]
 }
 
 model DriverProfile {
@@ -39,6 +40,7 @@ model DriverProfile {
   online   Boolean @default(true)
 
   responses OrderResponse[]
+  shipments Shipment[]
 }
 
 model Order {
@@ -61,6 +63,7 @@ model Order {
   createdAt DateTime @default(now())
 
   responses OrderResponse[]
+  shipment  Shipment?
 }
 
 model OrderResponse {
@@ -76,4 +79,18 @@ model OrderResponse {
   message String
 
   createdAt DateTime @default(now())
+}
+
+model Shipment {
+  id              String        @id @default(cuid())
+  trackingNo      String        @unique
+  orderId         String        @unique
+  order           Order         @relation(fields: [orderId], references: [id])
+  driverProfileId String
+  driver          DriverProfile @relation(fields: [driverProfileId], references: [id])
+  clientId        String
+  client          User          @relation(fields: [clientId], references: [id])
+  status          String        @default("PREPARING")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }

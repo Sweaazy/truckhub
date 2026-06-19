@@ -1,7 +1,38 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { IconUser, IconBolt, IconPlus, IconTruck, IconStar, IconMapPin, IconArrowRight, IconMessageCircle } from '@tabler/icons-react';
+import {
+  IconUser, IconBolt, IconPlus, IconTruck, IconStar, IconMapPin,
+  IconArrowRight, IconMessageCircle, IconPackage,
+} from '@tabler/icons-react';
+
+const SHIPMENT_STATUSES = [
+  { code: 'PREPARING',  label: 'Подготовка к отправке' },
+  { code: 'PICKED_UP',  label: 'Груз забран' },
+  { code: 'IN_TRANSIT', label: 'В пути' },
+  { code: 'DELIVERED',  label: 'Доставлено' },
+];
+
+function statusLabel(code: string) {
+  return SHIPMENT_STATUSES.find((s) => s.code === code)?.label ?? code;
+}
+
+function statusColor(code: string) {
+  if (code === 'DELIVERED') return 'var(--verified-text)';
+  if (code === 'IN_TRANSIT') return 'var(--accent)';
+  return 'var(--text-2)';
+}
+
+interface ShipmentData {
+  id: string;
+  trackingNo: string;
+  status: string;
+  createdAt: Date;
+  order: { fromCity: string; toCity: string; cargo: string; currency: string; budget: number | null; negotiable: boolean };
+  driver?: { city: string; truck: string; user: { name: string } };
+  client?: { name: string };
+}
 
 interface Order {
   id: string;
@@ -45,6 +76,7 @@ interface DriverProfileData {
   pro: boolean;
   online: boolean;
   responses: DriverResponse[];
+  shipments: ShipmentData[];
 }
 
 interface ProfileUser {
@@ -54,13 +86,103 @@ interface ProfileUser {
   role: string;
   createdAt: Date;
   orders: Order[];
+  shipments: ShipmentData[];
   driverProfile: DriverProfileData | null;
+}
+
+function ShipmentTimeline({ status }: { status: string }) {
+  const idx = SHIPMENT_STATUSES.findIndex((s) => s.code === status);
+  return (
+    <div style={{ display: 'flex', gap: 0, marginTop: 10 }}>
+      {SHIPMENT_STATUSES.map((s, i) => (
+        <div key={s.code} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+          {i > 0 && (
+            <div style={{
+              position: 'absolute', left: '-50%', top: 7, width: '100%', height: 2,
+              background: i <= idx ? 'var(--accent)' : 'var(--border-soft)',
+            }} />
+          )}
+          <div style={{
+            width: 16, height: 16, borderRadius: '50%', border: '2px solid',
+            borderColor: i <= idx ? 'var(--accent)' : 'var(--border-soft)',
+            background: i <= idx ? 'var(--accent)' : 'var(--bg)',
+            position: 'relative', zIndex: 1, flexShrink: 0,
+          }} />
+          <div style={{ fontSize: 9, color: i <= idx ? 'var(--accent)' : 'var(--text-3)', textAlign: 'center', marginTop: 4, lineHeight: 1.3, maxWidth: 60 }}>
+            {s.label}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DriverShipmentCard({ shipment }: { shipment: ShipmentData }) {
+  const [status, setStatus] = useState(shipment.status);
+  const [loading, setLoading] = useState(false);
+
+  const currentIdx = SHIPMENT_STATUSES.findIndex((s) => s.code === status);
+  const nextStatus = SHIPMENT_STATUSES[currentIdx + 1];
+
+  async function advance() {
+    if (!nextStatus) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/shipments/${shipment.trackingNo}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: nextStatus.code }),
+      });
+      if (res.ok) setStatus(nextStatus.code);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="card" style={{ padding: '14px 16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 6 }}>
+            {shipment.order.fromCity} <IconArrowRight size={12} style={{ color: 'var(--text-3)' }} /> {shipment.order.toCity}
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--text-2)', marginTop: 2 }}>{shipment.order.cargo}</div>
+          {shipment.client && (
+            <div style={{ fontSize: 11, color: 'var(--text-3)', marginTop: 2 }}>Клиент: {shipment.client.name}</div>
+          )}
+        </div>
+        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--text-3)', marginBottom: 2 }}>
+            {shipment.trackingNo}
+          </div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: statusColor(status) }}>{statusLabel(status)}</div>
+        </div>
+      </div>
+      <ShipmentTimeline status={status} />
+      {nextStatus && (
+        <button
+          className="btn btn-primary"
+          style={{ marginTop: 12, fontSize: 11, width: '100%' }}
+          onClick={advance}
+          disabled={loading}
+        >
+          {loading ? 'Обновляем...' : `Отметить: ${nextStatus.label}`}
+        </button>
+      )}
+      {status === 'DELIVERED' && (
+        <div style={{ marginTop: 10, fontSize: 12, color: 'var(--verified-text)', fontWeight: 700, textAlign: 'center' }}>
+          ✓ Груз доставлен
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function ProfileView({ user }: { user: ProfileUser }) {
   const joinedYear = new Date(user.createdAt).getFullYear();
   const isDriver = user.role === 'DRIVER';
   const driverResponses = user.driverProfile?.responses ?? [];
+  const driverShipments = user.driverProfile?.shipments ?? [];
 
   return (
     <div style={{ maxWidth: 720, margin: '0 auto', padding: '28px 20px' }}>
@@ -104,6 +226,22 @@ export function ProfileView({ user }: { user: ProfileUser }) {
             <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><IconMapPin size={12} /> {user.driverProfile.city}</span>
             <span>{user.driverProfile.truck}</span>
             <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{user.driverProfile.priceKm} ₸/км</span>
+          </div>
+        </div>
+      )}
+
+      {/* Driver: active shipments */}
+      {isDriver && driverShipments.length > 0 && (
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <IconPackage size={16} style={{ color: 'var(--accent)' }} />
+            Мои перевозки
+            <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--text-3)' }}>{driverShipments.length}</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {driverShipments.map((s) => (
+              <DriverShipmentCard key={s.id} shipment={s} />
+            ))}
           </div>
         </div>
       )}
@@ -160,6 +298,45 @@ export function ProfileView({ user }: { user: ProfileUser }) {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Client: shipment tracking */}
+      {!isDriver && user.shipments.length > 0 && (
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <IconPackage size={16} style={{ color: 'var(--accent)' }} />
+            Мои перевозки
+            <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--text-3)' }}>{user.shipments.length}</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {user.shipments.map((s) => (
+              <div key={s.id} className="card" style={{ padding: '14px 16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      {s.order.fromCity} <IconArrowRight size={12} style={{ color: 'var(--text-3)' }} /> {s.order.toCity}
+                    </div>
+                    <div style={{ fontSize: 11, color: 'var(--text-2)', marginTop: 2 }}>{s.order.cargo}</div>
+                    {s.driver && (
+                      <div style={{ fontSize: 11, color: 'var(--text-3)', marginTop: 2 }}>
+                        Водитель: {s.driver.user.name} · {s.driver.truck}
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--text-3)', marginBottom: 3 }}>
+                      {s.trackingNo}
+                    </div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: statusColor(s.status) }}>
+                      {statusLabel(s.status)}
+                    </div>
+                  </div>
+                </div>
+                <ShipmentTimeline status={s.status} />
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

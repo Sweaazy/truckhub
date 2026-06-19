@@ -43,6 +43,7 @@ export function OrderDetail(props: OrderDetailProps) {
   const [responseCount, setResponseCount] = useState(initialResponseCount);
   const [status, setStatus] = useState(initialStatus);
   const [closeLoading, setCloseLoading] = useState(false);
+  const [trackingNo, setTrackingNo] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -87,15 +88,19 @@ export function OrderDetail(props: OrderDetailProps) {
     }
   }
 
-  async function handleClose() {
+  async function handleClose(driverProfileId?: string) {
     setCloseLoading(true);
     try {
       const res = await fetch(`/api/orders/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'CLOSED' }),
+        body: JSON.stringify({ status: 'CLOSED', driverProfileId }),
       });
-      if (res.ok) setStatus('CLOSED');
+      if (res.ok) {
+        const data = await res.json();
+        setStatus('CLOSED');
+        if (data.trackingNo) setTrackingNo(data.trackingNo);
+      }
     } finally {
       setCloseLoading(false);
     }
@@ -175,6 +180,21 @@ export function OrderDetail(props: OrderDetailProps) {
             )}
           </div>
 
+          {/* Tracking banner — shown after driver is selected */}
+          {isOwner && trackingNo && (
+            <div style={{ marginTop: 20, padding: '16px 18px', background: 'var(--verified-bg)', border: '1px solid var(--verified-border)', borderRadius: 12 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--verified-text)', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 6 }}>
+                Перевозка создана
+              </div>
+              <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: '0.08em', color: 'var(--verified-text)', marginBottom: 4 }}>
+                {trackingNo}
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--text-2)' }}>
+                Номер для отслеживания. Водитель будет обновлять статус — следи в личном кабинете.
+              </div>
+            </div>
+          )}
+
           {/* Responses list — visible to order owner */}
           {isOwner && (
             <div style={{ marginTop: 24 }}>
@@ -222,7 +242,7 @@ export function OrderDetail(props: OrderDetailProps) {
                           <button
                             className="btn btn-primary"
                             style={{ fontSize: 11 }}
-                            onClick={handleClose}
+                            onClick={() => handleClose(r.driverProfile.id)}
                             disabled={closeLoading}
                           >
                             <IconCheck size={12} /> Выбрать этого водителя

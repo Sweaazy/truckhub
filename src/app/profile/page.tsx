@@ -27,6 +27,13 @@ export default async function ProfilePage() {
         take: 20,
         include: { _count: { select: { responses: true } } },
       },
+      shipments: {
+        orderBy: { createdAt: 'desc' },
+        include: {
+          order: { select: { fromCity: true, toCity: true, cargo: true, currency: true, budget: true, negotiable: true } },
+          driver: { select: { city: true, truck: true, user: { select: { name: true } } } },
+        },
+      },
       driverProfile: {
         select: {
           id: true,
@@ -47,6 +54,13 @@ export default async function ProfilePage() {
               order: {
                 include: { client: { select: { name: true } } },
               },
+            },
+          },
+          shipments: {
+            orderBy: { createdAt: 'desc' },
+            include: {
+              order: { select: { fromCity: true, toCity: true, cargo: true } },
+              client: { select: { name: true } },
             },
           },
         },
