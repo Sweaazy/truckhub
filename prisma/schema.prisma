@@ -15,6 +15,7 @@ model User {
   passwordHash String?
   telegramId     String?  @unique
   phoneVerified  Boolean  @default(false)
+  verifyToken    String?  @unique
   createdAt      DateTime @default(now())
 
   orders        Order[]
