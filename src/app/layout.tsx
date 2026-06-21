@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Manrope } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { Footer } from '@/components/Footer';
 import './globals.css';
 import './components.css';
 
@@ -21,7 +22,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ru" suppressHydrationWarning>
       <body className={manrope.variable}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+            {children}
+            <Footer />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

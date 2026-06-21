@@ -62,7 +62,7 @@ export function DriverProfile({ driver }: { driver: DBDriverProfile }) {
             {me === null ? (
               <Link href={`/login?from=/driver/${driver.id}`} className="btn btn-primary"><IconMessageCircle size={13} /> Написать</Link>
             ) : me?.role === 'CLIENT' ? (
-              <button className="btn btn-primary" disabled title="Чат — скоро"><IconMessageCircle size={13} /> Написать</button>
+              <Link href="/orders/new" className="btn btn-primary"><IconFilePlus size={13} /> Создать заявку</Link>
             ) : me?.role === 'DRIVER' ? (
               <Link href="/orders" className="btn btn-secondary">Найти грузы</Link>
             ) : null}
@@ -155,12 +155,8 @@ export function DriverProfile({ driver }: { driver: DBDriverProfile }) {
             </div>
             {me === null ? (
               <Link href={`/login?from=/driver/${driver.id}`} className="btn btn-primary" style={{ width: '100%', marginBottom: 7 }}><IconMessageCircle size={13} /> Написать водителю</Link>
-            ) : me?.role === 'CLIENT' ? (
-              <button className="btn btn-primary" style={{ width: '100%', marginBottom: 7, opacity: 0.6, cursor: 'not-allowed' }} disabled>
-                <IconMessageCircle size={13} /> Чат — скоро
-              </button>
             ) : null}
-            <Link href="/orders/new" className="btn btn-secondary" style={{ width: '100%' }}><IconFilePlus size={12} /> Создать заявку</Link>
+            <Link href="/orders/new" className="btn btn-primary" style={{ width: '100%' }}><IconFilePlus size={12} /> Создать заявку</Link>
             <div style={{ height: 1, background: 'var(--border-soft)', margin: '11px 0' }} />
             {[['Статус', driver.online ? 'Онлайн' : 'Офлайн'], ['Рейсов', String(driver.trips)]].map(([l, v], i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
@@ -173,7 +169,7 @@ export function DriverProfile({ driver }: { driver: DBDriverProfile }) {
           </div>
           <div className="card" style={{ padding: 12 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>Безопасность TruckHUB</div>
-            {['Документы проверены', `Рейтинг ${driver.rating} · ${driver.reviews} отзывов`, 'Чат внутри платформы'].map((t) => (
+            {['Документы проверены', `Рейтинг ${driver.rating} · ${driver.reviews} отзывов`, 'Верифицирован через Telegram'].map((t) => (
               <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 5, fontSize: 11, color: 'var(--text-2)' }}>
                 <IconShieldCheck size={13} style={{ color: 'var(--verified-text)' }} /> {t}
               </div>
